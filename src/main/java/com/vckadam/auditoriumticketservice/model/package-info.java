@@ -1,7 +1,8 @@
 /**
  * Model classes used to produce essential models for applications.
  * <p>
- * These classes contain model for Auditorium, Customer, Seat and SeatHold.
+ * These classes contain model for Auditorium, Customer, Seat
+ * MaxConsecutiveEmptySeats and SeatHold.
  * </p>
  *
  * @author kadam
