@@ -139,7 +139,7 @@ public class Auditorium {
     }
 
     /** Method finds given number of seats as close as possible
-     *  to the Auditorium. It also tries to find all the seats together.
+     *  to the Auditorium's stage. It also tries to find all the seats together.
      *  If it is not possible to find all the seats together, it breaks
      *  the number of seats into half and try to find half seats together.
      * @param numSeats holds number of seats to find.
