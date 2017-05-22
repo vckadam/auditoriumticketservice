@@ -4,7 +4,8 @@ package com.vckadam.auditoriumticketservice.model;
  * MaxConsequtiveEmptySeatsInRow serves as a place to store maximum consecutive
  * empty seats in each row.
  */
-public class MaxConsecutiveEmptySeatsInRow {
+public class MaxConsecutiveEmptySeatsInRow implements
+        Comparable<MaxConsecutiveEmptySeatsInRow> {
 
     /** rowId holds identifier for the row and
      * maxConsEmptySeats holds maximum consecutive seats available
@@ -51,5 +52,20 @@ public class MaxConsecutiveEmptySeatsInRow {
      */
     public void setMaxConsEmptySeats(final int maxConsecutiveEmptySeats) {
         this.maxConsEmptySeats = maxConsecutiveEmptySeats;
+    }
+
+    /** Method helps to sort maxConsecutiveEmptySeatsInRow array.
+     * sort in descending order of maxConsEmptySeats
+     * if this value is same for both object, then
+     * ascending order of rowId
+     * @param obj hold object of MaxConsecutiveEmptySeatsInRow.
+     * @return return integer value based on comparison
+     */
+    public int compareTo(final MaxConsecutiveEmptySeatsInRow obj) {
+        if (this.maxConsEmptySeats != obj.maxConsEmptySeats) {
+            return obj.maxConsEmptySeats - this.maxConsEmptySeats;
+        } else {
+            return this.rowId - obj.rowId;
+        }
     }
 }

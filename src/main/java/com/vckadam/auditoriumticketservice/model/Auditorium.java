@@ -1,5 +1,6 @@
 package com.vckadam.auditoriumticketservice.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -73,6 +74,21 @@ public class Auditorium {
     }
 
     /** Getter method for numberOfRows.
+     * @return array maxConsecutiveEmptySeatsInRow
+     */
+    public MaxConsecutiveEmptySeatsInRow[] getMaxConsecutiveEmptySeatsInRow() {
+        return maxConsecutiveEmptySeatsInRow;
+    }
+
+    /** Getter method for numberOfRows.
+     * @return map maxConsEmptySeatsObjs
+     */
+    public Map<Integer,
+        MaxConsecutiveEmptySeatsInRow> getMaxConsEmptySeatsObjs() {
+        return maxConsEmptySeatsObjs;
+    }
+
+    /** Getter method for numberOfRows.
      * @return number of rows in the auditorium.
      */
     public int getNumberOfRows() {
@@ -139,6 +155,9 @@ public class Auditorium {
      * @return updated maximum value of maximum consecutive empty seats.
      */
     public int getUpdateMaxConsEmptySeats(final char rowId) {
+        if (rowId < 'A' || rowId >= (char) ('A' + this.numberOfRows)) {
+            return -1;
+        }
         int currentCount = 0, currentMax = 0;
         for (int i = 0; i < this.numberOfColumns; i++) {
             String key = this.createKeyForSeats(rowId, i);
@@ -154,6 +173,19 @@ public class Auditorium {
         }
         currentMax = Math.max(currentMax, currentCount);
         return currentMax;
+    }
+
+    /** Method updates maxConsecutiveEmptySeatsInRow and
+     *  maxConsEmptySeatsObjs.
+     *  @param rowId hold row identifier
+     *  @param newValue holds new updated value for maxConsEmptySeat
+     */
+    public void updateCollection(final char rowId, final int newValue) {
+        MaxConsecutiveEmptySeatsInRow obj =
+                this.maxConsEmptySeatsObjs
+                    .get(this.createKeyFormaxConsEmptySeatsObjs(rowId));
+        obj.setMaxConsEmptySeats(newValue);
+        Arrays.sort(this.maxConsecutiveEmptySeatsInRow);
     }
 
     /** Method generate key for Seats map.
