@@ -12,13 +12,6 @@ public class MaxConsecutiveEmptySeatsInRow {
      */
     private int rowId, maxConsEmptySeats;
 
-    /** Getter method for rowId.
-     * @return identifier of the row.
-     */
-    public int getRowId() {
-        return rowId;
-    }
-
     /** Constructor for MaxConsecutiveEmptySeatsInRow.
      *  @param rowIdentifier holds identifier for the row.
      *  @param maxConsecutiveEmptySeats holds maximum consecutive
@@ -28,6 +21,13 @@ public class MaxConsecutiveEmptySeatsInRow {
                                          final int maxConsecutiveEmptySeats) {
         this.rowId = rowIdentifier;
         this.maxConsEmptySeats = maxConsecutiveEmptySeats;
+    }
+
+    /** Getter method for rowId.
+     * @return identifier of the row.
+     */
+    public int getRowId() {
+        return rowId;
     }
 
     /** Setter method for rowId.

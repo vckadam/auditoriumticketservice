@@ -27,6 +27,15 @@ public class Auditorium {
      */
     private MaxConsecutiveEmptySeatsInRow[] maxConsecutiveEmptySeatsInRow;
 
+    /** each element of the maxConsEmptySeatsObjs holds object of
+     *  MaxConsecutiveEmptySeatsInRow class.
+     *  key of map holds row number i.e. 0, 2, 4
+     *  value of map holds object of MaxConsecutiveEmptySeatsInRow.
+     *  It provides functionality to find object from array
+     *  maxConsecutiveEmptySeatsInRow in O(1) time.
+     */
+    private Map<Integer, MaxConsecutiveEmptySeatsInRow> maxConsEmptySeatsObjs;
+
     /** seats map holds Seat objects.
      *  key of map holds (rowId of Seat)#(columnId of Seat) i.e. A#5
      *  value of map holds Seat object for a key.
@@ -45,10 +54,14 @@ public class Auditorium {
         this.maxConsecutiveEmptySeatsInRow = new
                 MaxConsecutiveEmptySeatsInRow[rowNum];
         this.seats = new HashMap<String, Seat>();
+        this.maxConsEmptySeatsObjs =
+                new HashMap<Integer, MaxConsecutiveEmptySeatsInRow>();
 
         for (int i = 0; i < rowNum; i++) {
             this.maxConsecutiveEmptySeatsInRow[i] =
                 new MaxConsecutiveEmptySeatsInRow(i, columnNum);
+            this.maxConsEmptySeatsObjs.put(i,
+                this.maxConsecutiveEmptySeatsInRow[i]);
             for (int j = 0; j < columnNum; j++) {
                 char rowId = (char) (i + 'A');
                 String key = Character.toString(rowId) + "#"
@@ -113,5 +126,39 @@ public class Auditorium {
         return new HashSet<Seat>();
     }
 
-    
+    /** Methods update maxConsEmptySeats count for the row
+     *  with given rowId.
+     * @param rowId holds row identifier.
+     */
+    public void updateMaxConsEmptySeats(final char rowId) {
+
+    }
+
+    /** Method generate key for Seats map.
+     *
+     * @param rowId hold row Identifier
+     * @param colId hold column Identifier
+     * @return Generated key for the map
+     */
+    public String createKeyForSeats(final char rowId, final int colId) {
+        if (rowId < 'A' || rowId >= (char) ('A' + this.numberOfRows)
+            || colId < 0 || colId >= this.numberOfColumns) {
+            return "";
+        }
+        return Character.toString(rowId) + "#"
+                + Integer.toString(colId);
+    }
+
+    /** Method generates key for MaxConsEmptySeatsObjs map.
+     *
+     * @param rowId holds row Identifier
+     * @return Generated key for the map
+     */
+    public int createKeyFormaxConsEmptySeatsObjs(final char rowId) {
+        if (rowId < 'A' || rowId >= (char) ('A' + this.numberOfRows)) {
+            return -1;
+        }
+        return rowId - 'A';
+    }
+
 }
