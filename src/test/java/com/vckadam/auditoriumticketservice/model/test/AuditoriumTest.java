@@ -5,12 +5,23 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vckadam.auditoriumticketservice.model.Auditorium;
+import com.vckadam.auditoriumticketservice.model.SeatType;
 
 /**
  * AuditoriumTest class contains test cases for the methods
  * of Auditorium class.
  */
 public class AuditoriumTest {
+
+    /** constant holds number of seats in a row. */
+    public static final int COLUMN_SIZE = 7;
+    
+    /** constant holds number of consecutive seats after
+     * return by getUpdateMaxConsEmptySeats after seat "A#2" is held */
+    public static final int UPDATED_COLUMN_SIZE = 4;
+
+    /** constant holds number of rows. */
+    public static final int ROW_SIZE = 7;
 
     /** Method test createKeyForSeats() method in Auditorium class.*/
     @Test
@@ -64,4 +75,24 @@ public class AuditoriumTest {
        assertEquals(actualOutput, -1);
     }
 
+    /** Method test getUpdateMaxConsEmptySeats()
+     *  method in Auditorium class.
+     */
+    @Test
+    public void testGetUpdateMaxConsEmptySeats1() {
+       Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
+       int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
+       assertEquals(actualOutput, AuditoriumTest.COLUMN_SIZE);
+    }
+
+    /** Method test getUpdateMaxConsEmptySeats()
+     *  method in Auditorium class.
+     */
+    @Test
+    public void testGetUpdateMaxConsEmptySeats2() {
+       Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
+       auditorium.getSeats().get("A#2").setSeatType(SeatType.HELD);
+       int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
+       assertEquals(actualOutput, AuditoriumTest.UPDATED_COLUMN_SIZE);
+    }
 }

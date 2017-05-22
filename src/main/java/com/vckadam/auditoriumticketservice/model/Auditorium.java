@@ -115,6 +115,13 @@ public class Auditorium {
         this.maxConsecutiveEmptySeats = maxConsEmptySeats;
     }
 
+    /**Getter method for seats.
+     * @return object of map seats.
+     */
+    public Map<String, Seat> getSeats() {
+        return seats;
+    }
+
     /** Method finds given number of seats as close as possible
      *  to the Auditorium. It also tries to find all the seats together.
      *  If it is not possible to find all the seats together, it breaks
@@ -126,12 +133,27 @@ public class Auditorium {
         return new HashSet<Seat>();
     }
 
-    /** Methods update maxConsEmptySeats count for the row
+    /** Methods count updated maxConsEmptySeats for the row
      *  with given rowId.
      * @param rowId holds row identifier.
+     * @return updated maximum value of maximum consecutive empty seats.
      */
-    public void updateMaxConsEmptySeats(final char rowId) {
-
+    public int getUpdateMaxConsEmptySeats(final char rowId) {
+        int currentCount = 0, currentMax = 0;
+        for (int i = 0; i < this.numberOfColumns; i++) {
+            String key = this.createKeyForSeats(rowId, i);
+            if (!key.equals("")) {
+                Seat seat = seats.get(key);
+                if (seat.getSeatType() == SeatType.OPEN) {
+                    currentCount++;
+                } else {
+                    currentMax = Math.max(currentMax, currentCount);
+                    currentCount = 0;
+                }
+            }
+        }
+        currentMax = Math.max(currentMax, currentCount);
+        return currentMax;
     }
 
     /** Method generate key for Seats map.
