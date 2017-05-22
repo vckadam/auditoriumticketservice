@@ -4,42 +4,79 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * SeatHold serves as a place for holding seats for the customer.
+ */
 public class SeatHold {
-	private String seatHoldId, customerEmail;
-	private Date timeStamp;
-	private Set<String> seatIds;
-	
-	public SeatHold(String seatHoldId, String customerEmail, Date timeStamp){
-		this.seatHoldId = seatHoldId;
-		this.customerEmail = customerEmail;
-		this.timeStamp = timeStamp;
-		seatIds = new HashSet<String>();
-	}
-	public String getSeatHoldId() {
-		return seatHoldId;
-	}
-	public void setSeatHoldId(String seatHoldId) {
-		this.seatHoldId = seatHoldId;
-	}
-	public String getCustomerEmail() {
-		return customerEmail;
-	}
-	public void setCustomerEmail(String customerEmail) {
-		this.customerEmail = customerEmail;
-	}
-	public Date getTimeStamp() {
-		return timeStamp;
-	}
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp = timeStamp;
-	}
-	public Set<String> getSeatIds() {
-		return seatIds;
-	}
-	public void addSeatIds(String seatId) {
-		seatIds.add(seatId);
-	}
-	public void removeSeatIds(String seatId) {
-		seatIds.remove(seatId);
-	}
+
+    /**Identifier for each seatHold object.*/
+    private final int seatHoldId;
+
+    /**Email address of the customer.*/
+    private final String customerEmail;
+
+    /**Time stamp when seats are held by the customer.*/
+    private final Date timeStamp;
+
+    /**Identifiers of the seats held by the customer. */
+    private Set<String> seatIds;
+
+    /**Constructor for SeatHold class.
+     * @param seatHoldNum holds identifier for SeatHold object.
+     * @param customerEmailAdd holds email address for customer.
+     * @param timeStampOfHeld holds time stamp when seats are held.
+     */
+    public SeatHold(final int seatHoldNum, final String customerEmailAdd,
+                    final Date timeStampOfHeld) {
+        this.seatHoldId = seatHoldNum;
+        this.customerEmail = customerEmailAdd;
+        this.timeStamp = timeStampOfHeld;
+        seatIds = new HashSet<String>();
+    }
+
+    /**Getter method for seatHoldId.
+     * @return a identifier for a SeatHold object.
+     */
+    public int getSeatHoldId() {
+        return seatHoldId;
+    }
+
+    /**Getter method for email.
+     * @return a email address of customer.
+     */
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    /**Getter method for timeStamp.
+     * @return a time stamp when seats are held.
+     */
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    /**Getter method for seatIds.
+     * @return a set of identifiers of the seats held by the customer.
+     */
+    public Set<String> getSeatIds() {
+        return seatIds;
+    }
+
+    /**Method to add a seatId in set of seats.
+     * @param seatIdentifier holds identifier for the seat.
+     */
+    public void addSeatIds(final String seatIdentifier) {
+        if (!seatIds.contains(seatIdentifier)) {
+            seatIds.add(seatIdentifier);
+        }
+    }
+
+    /**Method to remove a seatId in set of seats.
+     * @param seatIdentifier holds identifier for the seat.
+     */
+    public void removeSeatIds(final String seatIdentifier) {
+        if (seatIds.contains(seatIdentifier)) {
+            seatIds.remove(seatIdentifier);
+        }
+    }
 }
