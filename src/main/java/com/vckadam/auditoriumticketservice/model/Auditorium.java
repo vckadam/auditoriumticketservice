@@ -138,6 +138,20 @@ public class Auditorium {
         return seats;
     }
 
+    /** Method update maxConsEmptySeats variable for
+     * MaxConConsecutiveEmptySeatsInRow object for given rowInd.
+     * @param rowId holds rowId for maxConsecutiveEmptySeatsInRow.
+     * @param rowVal holds new value for the maxConsEmptySeats.
+     */
+    public void setMaxConsecutiveEmptySeatsInRow(final char rowId,
+        final int rowVal) {
+        final int rowInd = rowId - 'A';
+        if (rowInd >= 0 && rowInd < maxConsecutiveEmptySeatsInRow.length) {
+            this.maxConsecutiveEmptySeatsInRow[rowInd].
+                setMaxConsEmptySeats(rowVal);
+        }
+    }
+
     /** Method finds given number of seats as close as possible
      *  to the Auditorium's stage. It also tries to find all the seats together.
      *  If it is not possible to find all the seats together, it breaks

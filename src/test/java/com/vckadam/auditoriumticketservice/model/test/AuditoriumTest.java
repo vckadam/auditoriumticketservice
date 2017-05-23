@@ -165,4 +165,18 @@ public class AuditoriumTest {
        assertEquals(auditorium
            .getMaxConsecutiveEmptySeatsInRow()[2].getRowId(), 0);
     }
+
+    /** Method tests maxConsecutiveEmptySeatsInRow
+     *  method in Auditorium class.
+     */
+    @Test
+    public void testMaxConsecutiveEmptySeatsInRow() {
+       Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
+       auditorium.setMaxConsecutiveEmptySeatsInRow('B',
+           AuditoriumTest.UPDATED_COLUMN_SIZE);
+       assertEquals(auditorium
+               .getMaxConsecutiveEmptySeatsInRow()[1].getMaxConsEmptySeats(),
+                   AuditoriumTest.UPDATED_COLUMN_SIZE);
+    }
+
 }

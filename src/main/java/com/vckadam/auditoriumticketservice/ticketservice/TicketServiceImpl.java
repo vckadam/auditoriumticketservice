@@ -1,13 +1,18 @@
 package com.vckadam.auditoriumticketservice.ticketservice;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import com.vckadam.auditoriumticketservice.model.Auditorium;
 import com.vckadam.auditoriumticketservice.model.Customer;
+import com.vckadam.auditoriumticketservice.model.Seat;
 import com.vckadam.auditoriumticketservice.model.SeatHold;
+import com.vckadam.auditoriumticketservice.model.SeatType;
 
 /**
  * SeatHold serves as a central place for providing ticket service
@@ -46,6 +51,10 @@ public class TicketServiceImpl implements TicketService {
 
     /** Constant for the number of seats in a single row. */
     private static final int COLUMNNUM = 15;
+
+    /** Constants for time calculation for isExpired method. */
+    private static final int SECONDCONST = 1000, EXPIREDTIME = 120;
+
 
     /** Constructor for the TicketServiceImpl. */
     public TicketServiceImpl() {
@@ -87,14 +96,44 @@ public class TicketServiceImpl implements TicketService {
 
     /** Method to remove all the expired SeatHold objects. */
     public void clearExpiredTicketHolds() {
+        Set<Character> rowIdSet = new HashSet<Character>();
+        while (!seatHoldQueue.isEmpty() && isExpired(seatHoldQueue.peek())) {
+            SeatHold seatHold = seatHolds.get(seatHoldQueue.remove());
+            for (String seatId : seatHold.getSeatIds()) {
+                Seat seat = auditorium.getSeats().get(seatId);
+                seat.setSeatType(SeatType.OPEN);
+                rowIdSet.add(seat.getRowId());
+            }
+            for (Character rowId : rowIdSet) {
+                auditorium.setMaxConsecutiveEmptySeatsInRow(rowId,
+                    auditorium.getUpdateMaxConsEmptySeats(rowId));
+            }
+            auditorium.setAvailableSeats(auditorium.getAvailableSeats()
+                - rowIdSet.size());
+            auditorium.setMaxConsecutiveEmptySeats(auditorium.
+                getMaxConsecutiveEmptySeatsInRow()[0].getMaxConsEmptySeats());
+            if (seatHolds.containsKey(seatHold.getSeatHoldId())) {
+                this.seatHolds.remove(seatHold.getSeatHoldId());
+            }
+        }
+    }
 
+    /** Method checks that seatHold is expired or not.
+     *  @param seatHoldId holds seatHold identifier.
+     *  @return true if seatHold object is expired.
+     */
+    public boolean isExpired(final int seatHoldId) {
+        return ((new Date().getTime() - (seatHolds.get(seatHoldId)
+            .getTimeStamp().getTime())) / TicketServiceImpl.SECONDCONST)
+                > TicketServiceImpl.EXPIREDTIME;
     }
     /**
      * The number of seats in the auditorium that are neither held nor reserved.
      * @return the number of tickets available in the auditorium.
      */
     public int numSeatsAvailable() {
-        return 0;
+        clearExpiredTicketHolds();
+        return auditorium.getAvailableSeats();
     }
 
     /**
@@ -106,6 +145,7 @@ public class TicketServiceImpl implements TicketService {
      */
     public SeatHold findAndHoldSeats(final int numSeats,
                                      final String customerEmail) {
+        clearExpiredTicketHolds();
         return null;
     }
 
@@ -118,6 +158,7 @@ public class TicketServiceImpl implements TicketService {
      */
     public String reserveSeats(final int seatHoldId,
                                final String customerEmail) {
+        clearExpiredTicketHolds();
         return null;
     }
 
