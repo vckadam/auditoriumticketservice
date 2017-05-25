@@ -1,6 +1,4 @@
 package com.vckadam.auditoriumticketservice.ticketservice;
-
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,12 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 
+import com.vckadam.auditoriumticketservice.enumerator.SeatType;
+import com.vckadam.auditoriumticketservice.exception.HouseFullException;
+import com.vckadam.auditoriumticketservice.exception.InvalidCustomerEmailException;
+import com.vckadam.auditoriumticketservice.exception.InvalidSeatHoldIdException;
+import com.vckadam.auditoriumticketservice.exception.OnlyFewSeatsAvailableException;
 import com.vckadam.auditoriumticketservice.model.Auditorium;
 import com.vckadam.auditoriumticketservice.model.Customer;
 import com.vckadam.auditoriumticketservice.model.Seat;
 import com.vckadam.auditoriumticketservice.model.SeatHold;
-import com.vckadam.auditoriumticketservice.model.SeatType;
 
 /**
  * SeatHold serves as a central place for providing ticket service
@@ -105,24 +108,26 @@ public class TicketServiceImpl implements TicketService {
         Set<Character> rowIdSet = new HashSet<Character>();
         while (!seatHoldQueue.isEmpty() && isExpired(seatHoldQueue.peek())) {
             SeatHold seatHold = seatHolds.get(seatHoldQueue.remove());
+            if (seatHold.isConfirmed()) {
+                continue;
+            }
             for (Seat seat : seatHold.getHeldSeats()) {
                 //Seat seat = auditorium.getSeats().get(seatId);
                 seat.setSeatType(SeatType.OPEN);
                 rowIdSet.add(seat.getRowId());
             }
-            for (Character rowId : rowIdSet) {
-                auditorium.setMaxConsecutiveEmptySeatsInRow(rowId,
-                    auditorium.getUpdateMaxConsEmptySeats(rowId));
-            }
-            Arrays.sort(auditorium.getMaxConsecutiveEmptySeatsInRow());
-            auditorium.setAvailableSeats(auditorium.getAvailableSeats()
-                - rowIdSet.size());
-            auditorium.setMaxConsecutiveEmptySeats(auditorium.
-                getMaxConsecutiveEmptySeatsInRow()[0].getMaxConsEmptySeats());
             if (seatHolds.containsKey(seatHold.getSeatHoldId())) {
                 this.seatHolds.remove(seatHold.getSeatHoldId());
             }
         }
+        for (Character rowId : rowIdSet) {
+            auditorium.setMaxConsecutiveEmptySeatsInRow(rowId,
+                auditorium.getUpdateMaxConsEmptySeatsInRow(rowId));
+        }
+        auditorium.updateMaxConsecutiveEmptySeats();
+        //Arrays.sort(auditorium.getMaxConsecutiveEmptySeatsInRow());
+        auditorium.setAvailableSeats(auditorium.getAvailableSeats()
+            - rowIdSet.size());
     }
 
     /** Method checks that seatHold is expired or not.
@@ -153,8 +158,13 @@ public class TicketServiceImpl implements TicketService {
      */
     public SeatHold findAndHoldSeats(final int numSeats,
                                      final String customerEmail) {
-        if (numSeats <= 0 || numSeats > auditorium.getAvailableSeats()) {
-            return null;
+        if (numSeats <= 0) {
+            throw new HouseFullException("House is Full.");
+        }
+        if (numSeats > auditorium.getAvailableSeats()) {
+            String errMsg = "Only " + auditorium.getAvailableSeats() + " seats"
+                + " are available.";
+            throw new OnlyFewSeatsAvailableException(errMsg);
         }
         clearExpiredTicketHolds();
         if (!customers.containsKey(customerEmail)) {
@@ -182,8 +192,23 @@ public class TicketServiceImpl implements TicketService {
      */
     public String reserveSeats(final int seatHoldId,
                                final String customerEmail) {
+        if (!seatHolds.containsKey(seatHoldId)) {
+            throw new InvalidSeatHoldIdException(
+                "SeatHold id is either expired or doesn't exist.");
+        }
+        SeatHold seatHold = seatHolds.get(seatHoldId);
+        if (seatHold.getCustomerEmail() != customerEmail) {
+            throw new InvalidCustomerEmailException(
+                "Email id doen't match with the records.");
+        }
         clearExpiredTicketHolds();
-        return null;
+        String confirmationCode = UUID.randomUUID().toString();
+        customers.get(customerEmail).getConfirmations().add(confirmationCode);
+        for (Seat seat : seatHold.getHeldSeats()) {
+            seat.setSeatType(SeatType.RESERVED);
+        }
+        seatHold.setConfirmed(true);
+        return confirmationCode;
     }
 
 }

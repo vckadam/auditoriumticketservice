@@ -1,4 +1,4 @@
-package com.vckadam.auditoriumticketservice.model;
+package com.vckadam.auditoriumticketservice.enumerator;
 
 /**
  * SeatType serves as a fixed group of values for seat type.

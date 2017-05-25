@@ -22,6 +22,9 @@ public class SeatHold {
     /**list of the seats held by the customer. */
     private List<Seat> heldSeats;
 
+    /**isConfirmed holds reservation confirmation of SeatHold.*/
+    private boolean confirmed;
+
     /**Constructor for SeatHold class.
      * @param seatHoldNum holds identifier for SeatHold object.
      * @param customerEmailAdd holds email address for customer.
@@ -32,6 +35,7 @@ public class SeatHold {
         this.seatHoldId = seatHoldNum;
         this.customerEmail = customerEmailAdd;
         this.timeStamp = timeStampOfHeld;
+        this.confirmed = false;
         heldSeats = new ArrayList<Seat>();
     }
 
@@ -63,11 +67,25 @@ public class SeatHold {
         return this.heldSeats;
     }
 
-    /**Getter method for heldSeats.
+    /**Setter method for heldSeats.
      * @param seats holds a set of held seats.
      */
     public void setHeldSeats(final List<Seat> seats) {
          this.heldSeats = seats;
+    }
+
+    /**Getter method for confirmed.
+     * @return confirmation status.
+     */
+    public boolean isConfirmed() {
+         return this.confirmed;
+    }
+
+    /**Setter method for confirmed.
+     * @param status holds confirmation status.
+     */
+    public void setConfirmed(final boolean status) {
+         this.confirmed = status;
     }
 
   /*  *//**Method to add a seatId in set of seats.

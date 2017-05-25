@@ -2,12 +2,15 @@ package com.vckadam.auditoriumticketservice.model.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Before;
 
 import org.junit.Test;
 
+import com.vckadam.auditoriumticketservice.enumerator.SeatType;
 import com.vckadam.auditoriumticketservice.model.Auditorium;
-import com.vckadam.auditoriumticketservice.model.SeatType;
+import com.vckadam.auditoriumticketservice.model.Seat;
 
 /**
  * AuditoriumTest class contains test cases for the methods
@@ -130,7 +133,7 @@ public class AuditoriumTest {
     @Test
     public void testGetUpdateMaxConsEmptySeats1() {
        //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
-       int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
+       int actualOutput = auditorium.getUpdateMaxConsEmptySeatsInRow('A');
        assertEquals(actualOutput, AuditoriumTest.COLUMN_SIZE);
     }
 
@@ -143,7 +146,7 @@ public class AuditoriumTest {
     public void testGetUpdateMaxConsEmptySeats2() {
        //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
        auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
-       int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
+       int actualOutput = auditorium.getUpdateMaxConsEmptySeatsInRow('A');
        assertEquals(actualOutput, AuditoriumTest.UPDATED_COLUMN_SIZE);
     }
 
@@ -154,7 +157,7 @@ public class AuditoriumTest {
     @Test
     public void testGetUpdateMaxConsEmptySeats3() {
        //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
-       int actualOutput = auditorium.getUpdateMaxConsEmptySeats('a');
+       int actualOutput = auditorium.getUpdateMaxConsEmptySeatsInRow('a');
        assertEquals(actualOutput, -1);
     }
 
@@ -169,39 +172,13 @@ public class AuditoriumTest {
     public void testUpdateCollection1() {
        //Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
        auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
-       int newValue = auditorium.getUpdateMaxConsEmptySeats('A');
+       int newValue = auditorium.getUpdateMaxConsEmptySeatsInRow('A');
        assertEquals(newValue, AuditoriumTest.UPDATED_COLUMN_SIZE);
        auditorium.updateCollection('A', newValue);
-       assertEquals(auditorium.getMaxConsecutiveEmptySeatsRowInd()[0]
-           .getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
-       assertEquals(auditorium
-           .getMaxConsecutiveEmptySeatsInRow()[2].getRowId(), 0);
+       assertEquals(auditorium.getMaxConsecutiveEmptySeatsInRow()[0]
+           .getMaxConsEmptySeats(), newValue);
     }
 
-    /** Method test updateCollection()
-     *  method in Auditorium class.
-     *  It tests value of MaxConsecutiveEmptySeatsInRow object &
-     *  is updated with new value.
-     *  And, Array maxConsecutiveEmptySeatsInRow is sorted in the
-     *  descending order of maxConsEmptySeats.
-     *  It also tests that if two objects have same maxConsEmptySeats values,
-     *  Array is sorted those object in the ascending order of rowId
-     */
-    @Test
-    public void testUpdateCollection2() {
-       /*Auditorium auditorium = new Auditorium(AuditoriumTest.ROW_SIZE,
-           AuditoriumTest.COLUMN_SIZE);*/
-       auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
-       int newValue = auditorium.getUpdateMaxConsEmptySeats('A');
-       assertEquals(newValue, AuditoriumTest.UPDATED_COLUMN_SIZE);
-       auditorium.updateCollection('A', newValue);
-       assertEquals(auditorium.getMaxConsecutiveEmptySeatsRowInd()[0]
-           .getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
-       assertEquals(auditorium
-           .getMaxConsecutiveEmptySeatsInRow()[0].getRowId(), 1);
-       assertEquals(auditorium
-           .getMaxConsecutiveEmptySeatsInRow()[2].getRowId(), 0);
-    }
 
     /** Method tests maxConsecutiveEmptySeatsInRow
      *  method in Auditorium class.
@@ -243,4 +220,100 @@ public class AuditoriumTest {
        final int expectedOutput = 2;
        assertEquals(actualOutput, expectedOutput);
     }
+
+    /** Method tests updateMaxConsecutiveEmptySeats
+    *  method in Auditorium class.
+    */
+   @Test
+   public void testUpdateMaxConsecutiveEmptySeats() {
+       assertEquals(auditorium.getMaxConsecutiveEmptySeats(),
+           auditorium.getNumberOfColumns());
+       for (int i = 0; i < auditorium.getNumberOfRows(); i++) {
+           if (i % 2 == 0) {
+               auditorium.getMaxConsecutiveEmptySeatsInRow()[i]
+                       .setMaxConsEmptySeats(2);
+           } else {
+               auditorium.getMaxConsecutiveEmptySeatsInRow()[i]
+                       .setMaxConsEmptySeats(0);
+           }
+       }
+       auditorium.updateMaxConsecutiveEmptySeats();
+       assertEquals(2, auditorium.getMaxConsecutiveEmptySeats());
+   }
+
+   /** Method tests findSeatsInSingleRow
+    *  method in Auditorium class.
+    *  If auditorium is empty, method will select
+    *  first two seats.
+    */
+   @Test
+   public void testFindSeatsInSingleRow1() {
+       List<Seat> seats = auditorium.findSeatsInSingleRow(2);
+       assertEquals("A#0", seats.get(0).getSeatNo());
+       assertEquals("A#1", seats.get(1).getSeatNo());
+   }
+
+   /** Method tests findSeatsInSingleRow
+    *  method in Auditorium class.
+    *  Though auditorium has few empty seats in first two rows,
+    *  method will try to find all the seats together.
+    */
+   @Test
+   public void testFindSeatsInSingleRow2() {
+       final int numberOfSeats = 3;
+       auditorium.updateCollection('A', 2);
+       auditorium.updateCollection('B', 2);
+       List<Seat> seats = auditorium.findSeatsInSingleRow(
+           numberOfSeats);
+       assertEquals("C#0", seats.get(0).getSeatNo());
+       assertEquals("C#1", seats.get(1).getSeatNo());
+       assertEquals("C#2", seats.get(2).getSeatNo());
+   }
+
+   /** Method tests findSeatsInSingleRow
+    *  method in Auditorium class.
+    *  If auditorium has few empty seats in first two rows,
+    *  method will try to fill the empty seat fragments first.
+    */
+   @Test
+   public void testFindSeatsInSingleRow3() {
+       final int rowLimit = 5, numberOfSeats = 3;
+       for (int i = 0; i < rowLimit; i++) {
+           auditorium.getSeats()[0][i].setSeatType(SeatType.HELD);
+       }
+       auditorium.updateCollection('A', 2);
+       auditorium.updateCollection('B', 2);
+       List<Seat> seats = auditorium.findSeatsInSingleRow(
+           numberOfSeats);
+       assertEquals("C#0", seats.get(0).getSeatNo());
+       assertEquals("C#1", seats.get(1).getSeatNo());
+       assertEquals("C#2", seats.get(2).getSeatNo());
+       List<Seat> newSeats = auditorium.findSeatsInSingleRow(
+               1);
+       assertEquals("A#5", newSeats.get(0).getSeatNo());
+   }
+
+   /** Method tests findBestSeats
+    *  method in Auditorium class.
+    *  If auditorium doen't have consecutive empty seats
+    *  in single row,
+    *  then method split the seats in two rows.
+    */
+   @Test
+   public void testFindBestSeats() {
+       final int rowLimit = 5, numberOfSeats = 3;
+       for (int i = 0; i < rowLimit; i++) {
+           auditorium.getSeats()[0][i].setSeatType(SeatType.HELD);
+           auditorium.getSeats()[1][i].setSeatType(SeatType.RESERVED);
+       }
+       auditorium.setMaxConsecutiveEmptySeats(2);
+       auditorium.updateCollection('A', 2);
+       auditorium.updateCollection('B', 2);
+       List<Seat> seats = auditorium.findBestSeats(
+           numberOfSeats);
+       assertEquals("A#5", seats.get(0).getSeatNo());
+       assertEquals("A#6", seats.get(1).getSeatNo());
+       assertEquals("B#5", seats.get(2).getSeatNo());
+   }
+
 }

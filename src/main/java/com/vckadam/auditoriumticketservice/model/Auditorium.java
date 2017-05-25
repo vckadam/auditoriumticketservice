@@ -1,8 +1,9 @@
 package com.vckadam.auditoriumticketservice.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import com.vckadam.auditoriumticketservice.enumerator.SeatType;
 
 /**
  * Auditorium serves as a central place for all actions inside auditorium.
@@ -24,8 +25,7 @@ public class Auditorium {
     /** each element of maxConsecutiveEmptySeatsInRow array holds maximum
      * consecutive empty seats for each row.
      */
-    private MaxConsecutiveEmptySeatsInRow[] maxConsecutiveEmptySeatsInRow,
-        maxConsecutiveEmptySeatsRowInd;
+    private MaxConsecutiveEmptySeatsInRow[] maxConsecutiveEmptySeatsInRow;
 
     /** each element of the maxConsEmptySeatsObjs holds object of
      *  MaxConsecutiveEmptySeatsInRow class.
@@ -50,12 +50,12 @@ public class Auditorium {
     public Auditorium(final int rowNum, final int columnNum) {
         this.numberOfRows = rowNum;
         this.numberOfColumns = columnNum;
-        this.setAvailableSeats(rowNum * columnNum);
-        this.setMaxConsecutiveEmptySeats(columnNum);
+        this.availableSeats = rowNum * columnNum;
+        this.maxConsecutiveEmptySeats = columnNum;
         this.maxConsecutiveEmptySeatsInRow = new
                 MaxConsecutiveEmptySeatsInRow[rowNum];
-        this.maxConsecutiveEmptySeatsRowInd = new
-                MaxConsecutiveEmptySeatsInRow[rowNum];
+        /*this.maxConsecutiveEmptySeatsRowInd = new
+                MaxConsecutiveEmptySeatsInRow[rowNum];*/
         //this.seats = new HashMap<String, Seat>();
         this.seats = new Seat[rowNum][columnNum];
         /*this.maxConsEmptySeatsObjs =
@@ -65,8 +65,8 @@ public class Auditorium {
         for (int i = 0; i < rowNum; i++) {
             this.maxConsecutiveEmptySeatsInRow[i] =
                 new MaxConsecutiveEmptySeatsInRow(i, columnNum);
-            this.maxConsecutiveEmptySeatsRowInd[i] =
-                    maxConsecutiveEmptySeatsInRow[i];
+            /*this.maxConsecutiveEmptySeatsRowInd[i] =
+                    maxConsecutiveEmptySeatsInRow[i];*/
             /*this.maxConsEmptySeatsObjs.put(i,
                 this.maxConsecutiveEmptySeatsInRow[i]);*/
             for (int j = 0; j < columnNum; j++) {
@@ -90,10 +90,10 @@ public class Auditorium {
     /** Getter method for maxConsecutiveEmptySeatsRowInd.
      * @return array of MaxConsecutiveEmptySeatsInRow with index as
      * row identifier.
-     */
+     *//*
     public MaxConsecutiveEmptySeatsInRow[] getMaxConsecutiveEmptySeatsRowInd() {
         return maxConsecutiveEmptySeatsRowInd;
-    }
+    }*/
 
     /** Getter method for numberOfRows.
      * @return number of rows in the auditorium.
@@ -165,7 +165,7 @@ public class Auditorium {
      * @param rowId holds row identifier.
      * @return updated maximum value of maximum consecutive empty seats.
      */
-    public int getUpdateMaxConsEmptySeats(final char rowId) {
+    public int getUpdateMaxConsEmptySeatsInRow(final char rowId) {
         if (rowId < 'A' || rowId >= (char) ('A' + this.numberOfRows)) {
             return -1;
         }
@@ -187,18 +187,27 @@ public class Auditorium {
         return currentMax;
     }
 
-    /** Method updates maxConsecutiveEmptySeatsInRow and
-     *  maxConsEmptySeatsObjs.
+    /** Method updates maxConsecutiveEmptySeats. */
+    public void updateMaxConsecutiveEmptySeats() {
+        int maxSeats = 0;
+        for (int i = 0; i < this.maxConsecutiveEmptySeatsInRow.length; i++) {
+            maxSeats = Math.max(maxSeats, this.maxConsecutiveEmptySeatsInRow[i]
+                .getMaxConsEmptySeats());
+        }
+        this.maxConsecutiveEmptySeats = maxSeats;
+    }
+
+    /** Method updates maxConsecutiveEmptySeatsInRow.
      *  @param rowId hold row identifier
      *  @param newValue holds new updated value for maxConsEmptySeat
      */
     public void updateCollection(final char rowId, final int newValue) {
         MaxConsecutiveEmptySeatsInRow obj =
-                this.maxConsecutiveEmptySeatsRowInd[rowId - 'A'];
+                this.maxConsecutiveEmptySeatsInRow[rowId - 'A'];
                 /*this.maxConsEmptySeatsObjs
                     .get(this.createKeyFormaxConsEmptySeatsObjs(rowId));*/
         obj.setMaxConsEmptySeats(newValue);
-        Arrays.sort(this.maxConsecutiveEmptySeatsInRow);
+        //Arrays.sort(this.maxConsecutiveEmptySeatsInRow);
     }
 
    /** Method finds starting column number which is starting point of
@@ -229,22 +238,12 @@ public class Auditorium {
      */
     public List<Seat> findSeatsInSingleRow(final int numberOfSeats) {
         List<Seat> foundSeats = new ArrayList<Seat>();
-        MaxConsecutiveEmptySeatsInRow selected =
-            maxConsecutiveEmptySeatsInRow[0];
-        for (int i = 0; i < maxConsecutiveEmptySeatsInRow.length; i++) {
-            if (numberOfSeats < maxConsecutiveEmptySeatsInRow[i]
-                .getMaxConsEmptySeats()) {
+        MaxConsecutiveEmptySeatsInRow selected = null;
+        for (int i = 0; i < this.maxConsecutiveEmptySeatsInRow.length; i++) {
+            if (this.maxConsecutiveEmptySeatsInRow[i].getMaxConsEmptySeats()
+                >= numberOfSeats) {
+                selected = this.maxConsecutiveEmptySeatsInRow[i];
                 break;
-            } else if (numberOfSeats == maxConsecutiveEmptySeatsInRow[i]
-                .getMaxConsEmptySeats()) {
-                selected = maxConsecutiveEmptySeatsInRow[i];
-                break;
-            } else {
-                if (selected.getMaxConsEmptySeats()
-                    != maxConsecutiveEmptySeatsInRow[i]
-                        .getMaxConsEmptySeats()) {
-                    selected = maxConsecutiveEmptySeatsInRow[i];
-                }
             }
         }
         final int selectedColumn = this.
@@ -254,10 +253,9 @@ public class Auditorium {
             foundSeats.add(seats[selected.getRowId()][i]);
         }
         this.updateCollection(this.generateRowId(selected.getRowId()),
-            this.getUpdateMaxConsEmptySeats(
+            this.getUpdateMaxConsEmptySeatsInRow(
                 this.generateRowId(selected.getRowId())));
-        this.maxConsecutiveEmptySeats = this.maxConsecutiveEmptySeatsInRow[0]
-            .getMaxConsEmptySeats();
+        this.updateMaxConsecutiveEmptySeats();
         return foundSeats;
     }
 
@@ -284,26 +282,6 @@ public class Auditorium {
             return foundSeats;
         }
     }
-
-    /** Method splits seats in multiple rows.
-    *
-    * @param numberOfSeats holds number of seats to find.
-    * @return a list of found seats.
-    *//*
-    private List<Seat> splitSeatsInMultipleRows(final int numberOfSeats) {
-        if (numberOfSeats <= this.maxConsecutiveEmptySeats) {
-            return this.findSeatsInSingleRow(numberOfSeats);
-        } else {
-            List<Seat> foundSeats = new ArrayList<Seat>();
-            int halfNumberOfSeats = numberOfSeats / 2;
-            if (numberOfSeats % 2 != 0) {
-                foundSeats.addAll(
-                    this.splitSeatsInMultipleRows(halfNumberOfSeats + 1));
-            }
-            foundSeats.addAll(this.splitSeatsInMultipleRows(halfNumberOfSeats));
-            return foundSeats;
-        }
-    }*/
 
     /** Method generate key for Seats map.
      *

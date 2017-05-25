@@ -1,9 +1,14 @@
 package com.vckadam.auditoriumticketservice.model;
 
+import com.vckadam.auditoriumticketservice.enumerator.SeatType;
+
 /**
  * Seat serves as a place for all actions those are performed on the seat.
  */
 public class Seat {
+
+    /**rowNo holds number of the seat. */
+    private final String seatNo;
 
     /**row id for the seat.*/
     private final char rowId;
@@ -21,7 +26,16 @@ public class Seat {
     public Seat(final char rowNum, final int columnNum) {
         this.rowId = rowNum;
         this.columnId = columnNum;
+        this.seatNo = String.valueOf(rowNum) + "#"
+            + String.valueOf(columnNum);
         this.seatType = SeatType.OPEN;
+    }
+
+    /**Getter method for seatNo.
+     * @return seat number.
+     */
+    public String getSeatNo() {
+       return this.seatNo;
     }
 
     /**Getter method for seatType.
