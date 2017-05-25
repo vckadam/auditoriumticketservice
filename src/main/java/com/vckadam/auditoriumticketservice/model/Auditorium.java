@@ -213,6 +213,27 @@ public class Auditorium {
         Arrays.sort(this.maxConsecutiveEmptySeatsInRow);
     }
 
+   /** Method finds starting column number which is starting point of
+    *  consecutive empty seats in the given row and given number of seats.
+    *
+    * @param rowInd holds index for the row.
+    * @param numberOfSeats holds number of empty seats to find.
+    * @return a column number which is starting point of found seats.
+    */
+    public int selectStartColumn(final int rowInd, final int numberOfSeats) {
+        int start = 0;
+        for (int i = start; i < this.numberOfColumns; i++) {
+            if (seats[rowInd][i].getSeatType() != SeatType.OPEN) {
+                start = i + 1;
+            } else {
+                if (i - start + 1 == numberOfSeats) {
+                    return start;
+                }
+            }
+        }
+        return start;
+    }
+
     /** Method generate key for Seats map.
      *
      * @param rowId hold row Identifier

@@ -25,6 +25,8 @@ public class AuditoriumTest {
     /** constant holds number of rows. */
     public static final int ROW_SIZE = 3;
 
+    /** constant holds index of row. */
+    public static final int ROWIND = 3;
     /** auditorium holds object of Auditorium class. */
     private Auditorium auditorium;
 
@@ -193,4 +195,31 @@ public class AuditoriumTest {
                    AuditoriumTest.UPDATED_COLUMN_SIZE);
     }
 
+    /** Method tests selectStartColumn
+     *  method in Auditorium class.
+     */
+    @Test
+    public void testSelectStartColumn1() {
+       auditorium.getSeats()[0][0].setSeatType(SeatType.HELD);
+       auditorium.getSeats()[0][1].setSeatType(SeatType.RESERVED);
+       auditorium.getSeats()[0][AuditoriumTest.ROWIND].
+           setSeatType(SeatType.HELD);
+       int actualOutput = auditorium.selectStartColumn(0, 2);
+       final int expectedOutput = 4;
+       assertEquals(actualOutput, expectedOutput);
+    }
+
+    /** Method tests selectStartColumn
+     *  method in Auditorium class.
+     */
+    @Test
+    public void testSelectStartColumn2() {
+       auditorium.getSeats()[0][0].setSeatType(SeatType.HELD);
+       auditorium.getSeats()[0][1].setSeatType(SeatType.RESERVED);
+       auditorium.getSeats()[0][AuditoriumTest.ROWIND].
+           setSeatType(SeatType.HELD);
+       int actualOutput = auditorium.selectStartColumn(0, 1);
+       final int expectedOutput = 2;
+       assertEquals(actualOutput, expectedOutput);
+    }
 }

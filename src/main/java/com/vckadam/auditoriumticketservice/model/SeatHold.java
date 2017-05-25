@@ -1,8 +1,9 @@
 package com.vckadam.auditoriumticketservice.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+
 
 /**
  * SeatHold serves as a place for holding seats for the customer.
@@ -18,8 +19,8 @@ public class SeatHold {
     /**Time stamp when seats are held by the customer.*/
     private final Date timeStamp;
 
-    /**Identifiers of the seats held by the customer. */
-    private Set<Seat> heldSeats;
+    /**list of the seats held by the customer. */
+    private List<Seat> heldSeats;
 
     /**Constructor for SeatHold class.
      * @param seatHoldNum holds identifier for SeatHold object.
@@ -31,7 +32,7 @@ public class SeatHold {
         this.seatHoldId = seatHoldNum;
         this.customerEmail = customerEmailAdd;
         this.timeStamp = timeStampOfHeld;
-        heldSeats = new HashSet<Seat>();
+        heldSeats = new ArrayList<Seat>();
     }
 
     /**Getter method for seatHoldId.
@@ -58,25 +59,32 @@ public class SeatHold {
     /**Getter method for heldSeats.
      * @return a set of identifiers of the seats held by the customer.
      */
-    public Set<Seat> getHeldSeats() {
+    public List<Seat> getHeldSeats() {
         return this.heldSeats;
     }
 
-    /**Method to add a seatId in set of seats.
-     * @param seat holds the seat.
+    /**Getter method for heldSeats.
+     * @param seats holds a set of held seats.
      */
-    public void addSeatIds(final Seat seat) {
+    public void setHeldSeats(final List<Seat> seats) {
+         this.heldSeats = seats;
+    }
+
+  /*  *//**Method to add a seatId in set of seats.
+     * @param seat holds the seat.
+     *//*
+    public void addSeat(final Seat seat) {
         if (!heldSeats.contains(seat)) {
             heldSeats.add(seat);
         }
     }
 
-    /**Method to remove a seat in set of seats.
+    *//**Method to remove a seat in set of seats.
      * @param seat holds identifier for the seat.
-     */
-    public void removeSeatIds(final String seat) {
+     *//*
+    public void removeSeat(final String seat) {
         if (heldSeats.contains(seat)) {
             heldSeats.remove(seat);
         }
-    }
+    }*/
 }
