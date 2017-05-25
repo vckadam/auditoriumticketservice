@@ -99,8 +99,8 @@ public class TicketServiceImpl implements TicketService {
         Set<Character> rowIdSet = new HashSet<Character>();
         while (!seatHoldQueue.isEmpty() && isExpired(seatHoldQueue.peek())) {
             SeatHold seatHold = seatHolds.get(seatHoldQueue.remove());
-            for (String seatId : seatHold.getSeatIds()) {
-                Seat seat = auditorium.getSeats().get(seatId);
+            for (Seat seat : seatHold.getHeldSeats()) {
+                //Seat seat = auditorium.getSeats().get(seatId);
                 seat.setSeatType(SeatType.OPEN);
                 rowIdSet.add(seat.getRowId());
             }
@@ -127,6 +127,7 @@ public class TicketServiceImpl implements TicketService {
             .getTimeStamp().getTime())) / TicketServiceImpl.SECONDCONST)
                 > TicketServiceImpl.EXPIREDTIME;
     }
+
     /**
      * The number of seats in the auditorium that are neither held nor reserved.
      * @return the number of tickets available in the auditorium.

@@ -2,6 +2,8 @@ package com.vckadam.auditoriumticketservice.model.test;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
+
 import org.junit.Test;
 
 import com.vckadam.auditoriumticketservice.model.Auditorium;
@@ -23,12 +25,24 @@ public class AuditoriumTest {
     /** constant holds number of rows. */
     public static final int ROW_SIZE = 3;
 
+    /** auditorium holds object of Auditorium class. */
+    private Auditorium auditorium;
+
+    /** Method creates object of Auditorium class
+     *  before every test case.
+     */
+    @Before
+    public void runOnceBeforeTestMethod() {
+        auditorium = new Auditorium(AuditoriumTest.ROW_SIZE,
+            AuditoriumTest.COLUMN_SIZE);
+    }
+
     /** Method test createKeyForSeats() method in Auditorium class.
      *  If rowId is valid, method returns valid key.
      */
     @Test
     public void testCreateKeyForSeats1() {
-       Auditorium auditorium = new Auditorium(1, 2);
+       //Auditorium auditorium = new Auditorium(1, 2);
        String actualOutput = auditorium.createKeyForSeats('A', 1);
        assertEquals(actualOutput, "A#1");
     }
@@ -38,8 +52,8 @@ public class AuditoriumTest {
      */
     @Test
     public void testCreateKeyForSeats2() {
-       Auditorium auditorium = new Auditorium(1, 2);
-       String actualOutput = auditorium.createKeyForSeats('C', 1);
+       //Auditorium auditorium = new Auditorium(1, 2);
+       String actualOutput = auditorium.createKeyForSeats('Z', 1);
        assertEquals(actualOutput, "");
     }
 
@@ -48,7 +62,7 @@ public class AuditoriumTest {
      */
     @Test
     public void testCreateKeyForSeats3() {
-       Auditorium auditorium = new Auditorium(1, 2);
+       //Auditorium auditorium = new Auditorium(1, 2);
        String actualOutput = auditorium.createKeyForSeats('B', -1);
        assertEquals(actualOutput, "");
     }
@@ -58,8 +72,8 @@ public class AuditoriumTest {
      */
     @Test
     public void testCreateKeyForSeats4() {
-       Auditorium auditorium = new Auditorium(1, 2);
-       String actualOutput = auditorium.createKeyForSeats('B', 2);
+       //Auditorium auditorium = new Auditorium(1, 2);
+       String actualOutput = auditorium.createKeyForSeats('D', 2);
        assertEquals(actualOutput, "");
     }
 
@@ -69,7 +83,7 @@ public class AuditoriumTest {
      */
     @Test
     public void testCreateKeyFormaxConsEmptySeatsObjs1() {
-       Auditorium auditorium = new Auditorium(2, 2);
+       //Auditorium auditorium = new Auditorium(2, 2);
        int actualOutput = auditorium.createKeyFormaxConsEmptySeatsObjs('B');
        assertEquals(actualOutput, 1);
     }
@@ -80,8 +94,8 @@ public class AuditoriumTest {
      */
     @Test
     public void testCreateKeyFormaxConsEmptySeatsObjs2() {
-       Auditorium auditorium = new Auditorium(1, 2);
-       int actualOutput = auditorium.createKeyFormaxConsEmptySeatsObjs('C');
+       //Auditorium auditorium = new Auditorium(1, 2);
+       int actualOutput = auditorium.createKeyFormaxConsEmptySeatsObjs('Z');
        assertEquals(actualOutput, -1);
     }
 
@@ -92,7 +106,7 @@ public class AuditoriumTest {
      */
     @Test
     public void testGetUpdateMaxConsEmptySeats1() {
-       Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
+       //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
        int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
        assertEquals(actualOutput, AuditoriumTest.COLUMN_SIZE);
     }
@@ -104,8 +118,8 @@ public class AuditoriumTest {
      */
     @Test
     public void testGetUpdateMaxConsEmptySeats2() {
-       Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
-       auditorium.getSeats().get("A#2").setSeatType(SeatType.HELD);
+       //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
+       auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
        int actualOutput = auditorium.getUpdateMaxConsEmptySeats('A');
        assertEquals(actualOutput, AuditoriumTest.UPDATED_COLUMN_SIZE);
     }
@@ -116,7 +130,7 @@ public class AuditoriumTest {
      */
     @Test
     public void testGetUpdateMaxConsEmptySeats3() {
-       Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
+       //Auditorium auditorium = new Auditorium(1, AuditoriumTest.COLUMN_SIZE);
        int actualOutput = auditorium.getUpdateMaxConsEmptySeats('a');
        assertEquals(actualOutput, -1);
     }
@@ -130,15 +144,15 @@ public class AuditoriumTest {
      */
     @Test
     public void testUpdateCollection1() {
-       Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
-       auditorium.getSeats().get("A#2").setSeatType(SeatType.HELD);
+       //Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
+       auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
        int newValue = auditorium.getUpdateMaxConsEmptySeats('A');
        assertEquals(newValue, AuditoriumTest.UPDATED_COLUMN_SIZE);
        auditorium.updateCollection('A', newValue);
-       assertEquals(auditorium.getMaxConsEmptySeatsObjs()
-           .get(0).getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
+       assertEquals(auditorium.getMaxConsecutiveEmptySeatsRowInd()[0]
+           .getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
        assertEquals(auditorium
-           .getMaxConsecutiveEmptySeatsInRow()[1].getRowId(), 0);
+           .getMaxConsecutiveEmptySeatsInRow()[2].getRowId(), 0);
     }
 
     /** Method test updateCollection()
@@ -152,16 +166,16 @@ public class AuditoriumTest {
      */
     @Test
     public void testUpdateCollection2() {
-       Auditorium auditorium = new Auditorium(AuditoriumTest.ROW_SIZE,
-           AuditoriumTest.COLUMN_SIZE);
-       auditorium.getSeats().get("A#2").setSeatType(SeatType.HELD);
+       /*Auditorium auditorium = new Auditorium(AuditoriumTest.ROW_SIZE,
+           AuditoriumTest.COLUMN_SIZE);*/
+       auditorium.getSeats()[0][2].setSeatType(SeatType.HELD);
        int newValue = auditorium.getUpdateMaxConsEmptySeats('A');
        assertEquals(newValue, AuditoriumTest.UPDATED_COLUMN_SIZE);
        auditorium.updateCollection('A', newValue);
-       assertEquals(auditorium.getMaxConsEmptySeatsObjs()
-           .get(0).getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
+       assertEquals(auditorium.getMaxConsecutiveEmptySeatsRowInd()[0]
+           .getMaxConsEmptySeats(), AuditoriumTest.UPDATED_COLUMN_SIZE);
        assertEquals(auditorium
-               .getMaxConsecutiveEmptySeatsInRow()[0].getRowId(), 1);
+           .getMaxConsecutiveEmptySeatsInRow()[0].getRowId(), 1);
        assertEquals(auditorium
            .getMaxConsecutiveEmptySeatsInRow()[2].getRowId(), 0);
     }
@@ -171,7 +185,7 @@ public class AuditoriumTest {
      */
     @Test
     public void testMaxConsecutiveEmptySeatsInRow() {
-       Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
+       //Auditorium auditorium = new Auditorium(2, AuditoriumTest.COLUMN_SIZE);
        auditorium.setMaxConsecutiveEmptySeatsInRow('B',
            AuditoriumTest.UPDATED_COLUMN_SIZE);
        assertEquals(auditorium

@@ -1,9 +1,9 @@
 package com.vckadam.auditoriumticketservice.model;
 
 import java.util.Arrays;
-import java.util.HashMap;
+
 import java.util.HashSet;
-import java.util.Map;
+
 import java.util.Set;
 
 /**
@@ -26,7 +26,8 @@ public class Auditorium {
     /** each element of maxConsecutiveEmptySeatsInRow array holds maximum
      * consecutive empty seats for each row.
      */
-    private MaxConsecutiveEmptySeatsInRow[] maxConsecutiveEmptySeatsInRow;
+    private MaxConsecutiveEmptySeatsInRow[] maxConsecutiveEmptySeatsInRow,
+        maxConsecutiveEmptySeatsRowInd;
 
     /** each element of the maxConsEmptySeatsObjs holds object of
      *  MaxConsecutiveEmptySeatsInRow class.
@@ -35,13 +36,14 @@ public class Auditorium {
      *  It provides functionality to find object from array
      *  maxConsecutiveEmptySeatsInRow in O(1) time.
      */
-    private Map<Integer, MaxConsecutiveEmptySeatsInRow> maxConsEmptySeatsObjs;
+    //private Map<Integer, MaxConsecutiveEmptySeatsInRow> maxConsEmptySeatsObjs;
 
     /** seats map holds Seat objects.
      *  key of map holds (rowId of Seat)#(columnId of Seat) i.e. A#5
      *  value of map holds Seat object for a key.
      */
-    private Map<String, Seat> seats;
+    //private Map<String, Seat> seats;
+    private Seat[][] seats;
 
     /** Constructor of Auditorium Class.
      *  @param rowNum holds number of rows in Auditorium.
@@ -54,38 +56,45 @@ public class Auditorium {
         this.setMaxConsecutiveEmptySeats(columnNum);
         this.maxConsecutiveEmptySeatsInRow = new
                 MaxConsecutiveEmptySeatsInRow[rowNum];
-        this.seats = new HashMap<String, Seat>();
-        this.maxConsEmptySeatsObjs =
-                new HashMap<Integer, MaxConsecutiveEmptySeatsInRow>();
+        this.maxConsecutiveEmptySeatsRowInd = new
+                MaxConsecutiveEmptySeatsInRow[rowNum];
+        //this.seats = new HashMap<String, Seat>();
+        this.seats = new Seat[rowNum][columnNum];
+        /*this.maxConsEmptySeatsObjs =
+                new HashMap<Integer, MaxConsecutiveEmptySeatsInRow>();*/
+
 
         for (int i = 0; i < rowNum; i++) {
             this.maxConsecutiveEmptySeatsInRow[i] =
                 new MaxConsecutiveEmptySeatsInRow(i, columnNum);
-            this.maxConsEmptySeatsObjs.put(i,
-                this.maxConsecutiveEmptySeatsInRow[i]);
+            this.maxConsecutiveEmptySeatsRowInd[i] =
+                    maxConsecutiveEmptySeatsInRow[i];
+            /*this.maxConsEmptySeatsObjs.put(i,
+                this.maxConsecutiveEmptySeatsInRow[i]);*/
             for (int j = 0; j < columnNum; j++) {
                 char rowId = (char) (i + 'A');
-                String key = Character.toString(rowId) + "#"
-                + Integer.toString(j);
+                /*String key = Character.toString(rowId) + "#"
+                + Integer.toString(j);*/
                 Seat seat = new Seat(rowId, j);
-                this.seats.put(key, seat);
+                //this.seats.put(key, seat);
+                this.seats[i][j] = seat;
             }
         }
     }
 
-    /** Getter method for numberOfRows.
-     * @return array maxConsecutiveEmptySeatsInRow
+    /** Getter method for maxConsecutiveEmptySeatsInRow.
+     * @return array MaxConsecutiveEmptySeatsInRow class
      */
     public MaxConsecutiveEmptySeatsInRow[] getMaxConsecutiveEmptySeatsInRow() {
         return maxConsecutiveEmptySeatsInRow;
     }
 
-    /** Getter method for numberOfRows.
-     * @return map maxConsEmptySeatsObjs
+    /** Getter method for maxConsecutiveEmptySeatsRowInd.
+     * @return array of MaxConsecutiveEmptySeatsInRow with index as
+     * row identifier.
      */
-    public Map<Integer,
-        MaxConsecutiveEmptySeatsInRow> getMaxConsEmptySeatsObjs() {
-        return maxConsEmptySeatsObjs;
+    public MaxConsecutiveEmptySeatsInRow[] getMaxConsecutiveEmptySeatsRowInd() {
+        return maxConsecutiveEmptySeatsRowInd;
     }
 
     /** Getter method for numberOfRows.
@@ -134,7 +143,7 @@ public class Auditorium {
     /**Getter method for seats.
      * @return object of map seats.
      */
-    public Map<String, Seat> getSeats() {
+    public Seat[][] getSeats() {
         return seats;
     }
 
@@ -176,7 +185,8 @@ public class Auditorium {
         for (int i = 0; i < this.numberOfColumns; i++) {
             String key = this.createKeyForSeats(rowId, i);
             if (!key.equals("")) {
-                Seat seat = seats.get(key);
+                //Seat seat = seats.get(key);
+                Seat seat = seats[rowId - 'A'][i];
                 if (seat.getSeatType() == SeatType.OPEN) {
                     currentCount++;
                 } else {
@@ -196,8 +206,9 @@ public class Auditorium {
      */
     public void updateCollection(final char rowId, final int newValue) {
         MaxConsecutiveEmptySeatsInRow obj =
-                this.maxConsEmptySeatsObjs
-                    .get(this.createKeyFormaxConsEmptySeatsObjs(rowId));
+                this.maxConsecutiveEmptySeatsRowInd[rowId - 'A'];
+                /*this.maxConsEmptySeatsObjs
+                    .get(this.createKeyFormaxConsEmptySeatsObjs(rowId));*/
         obj.setMaxConsEmptySeats(newValue);
         Arrays.sort(this.maxConsecutiveEmptySeatsInRow);
     }

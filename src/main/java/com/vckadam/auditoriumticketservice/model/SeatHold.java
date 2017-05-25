@@ -19,7 +19,7 @@ public class SeatHold {
     private final Date timeStamp;
 
     /**Identifiers of the seats held by the customer. */
-    private Set<String> seatIds;
+    private Set<Seat> heldSeats;
 
     /**Constructor for SeatHold class.
      * @param seatHoldNum holds identifier for SeatHold object.
@@ -31,7 +31,7 @@ public class SeatHold {
         this.seatHoldId = seatHoldNum;
         this.customerEmail = customerEmailAdd;
         this.timeStamp = timeStampOfHeld;
-        seatIds = new HashSet<String>();
+        heldSeats = new HashSet<Seat>();
     }
 
     /**Getter method for seatHoldId.
@@ -55,28 +55,28 @@ public class SeatHold {
         return timeStamp;
     }
 
-    /**Getter method for seatIds.
+    /**Getter method for heldSeats.
      * @return a set of identifiers of the seats held by the customer.
      */
-    public Set<String> getSeatIds() {
-        return seatIds;
+    public Set<Seat> getHeldSeats() {
+        return this.heldSeats;
     }
 
     /**Method to add a seatId in set of seats.
-     * @param seatIdentifier holds identifier for the seat.
+     * @param seat holds the seat.
      */
-    public void addSeatIds(final String seatIdentifier) {
-        if (!seatIds.contains(seatIdentifier)) {
-            seatIds.add(seatIdentifier);
+    public void addSeatIds(final Seat seat) {
+        if (!heldSeats.contains(seat)) {
+            heldSeats.add(seat);
         }
     }
 
-    /**Method to remove a seatId in set of seats.
-     * @param seatIdentifier holds identifier for the seat.
+    /**Method to remove a seat in set of seats.
+     * @param seat holds identifier for the seat.
      */
-    public void removeSeatIds(final String seatIdentifier) {
-        if (seatIds.contains(seatIdentifier)) {
-            seatIds.remove(seatIdentifier);
+    public void removeSeatIds(final String seat) {
+        if (heldSeats.contains(seat)) {
+            heldSeats.remove(seat);
         }
     }
 }
