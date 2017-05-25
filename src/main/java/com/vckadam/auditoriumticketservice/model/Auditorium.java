@@ -162,16 +162,6 @@ public class Auditorium {
         }
     }
 
-    /** Method finds given number of seats as close as possible
-     *  to the Auditorium's stage. It also tries to find all the seats together.
-     *  If it is not possible to find all the seats together, it breaks
-     *  the number of seats into half and try to find half seats together.
-     * @param numSeats holds number of seats to find.
-     * @return set of best seats.
-     */
-    public Set<Seat> findBestSeats(final int numSeats) {
-        return new HashSet<Seat>();
-    }
 
     /** Methods count updated maxConsEmptySeats for the row
      *  with given rowId.
@@ -274,6 +264,40 @@ public class Auditorium {
         return foundSeats;
     }
 
+    /** Method finds given number of seats as close as possible
+     *  to the Auditorium's stage. It also tries to find all the seats together.
+     *  If it is not possible to find all the seats together, it breaks
+     *  the number of seats into half and try to find half seats together.
+     * @param numberOfSeats holds number of seats to find.
+     * @return list of best seats.
+     */
+    public List<Seat> findBestSeats(final int numberOfSeats) {
+        if (numberOfSeats <= this.maxConsecutiveEmptySeats) {
+            return this.findSeatsInSingleRow(numberOfSeats);
+        } else {
+            return this.splitSeatsInMultipleRows(numberOfSeats);
+        }
+    }
+
+    /** Method splits seats in multiple rows.
+    *
+    * @param numberOfSeats holds number of seats to find.
+    * @return a list of found seats.
+    */
+    private List<Seat> splitSeatsInMultipleRows(final int numberOfSeats) {
+        if (numberOfSeats <= this.maxConsecutiveEmptySeats) {
+            return this.findSeatsInSingleRow(numberOfSeats);
+        } else {
+            List<Seat> foundSeats = new ArrayList<Seat>();
+            int halfNumberOfSeats = numberOfSeats / 2;
+            if (numberOfSeats % 2 != 0) {
+                foundSeats.addAll(
+                    this.splitSeatsInMultipleRows(halfNumberOfSeats + 1));
+            }
+            foundSeats.addAll(this.splitSeatsInMultipleRows(halfNumberOfSeats));
+            return foundSeats;
+        }
+    }
     /** Method generate key for Seats map.
      *
      * @param rowId hold row Identifier
