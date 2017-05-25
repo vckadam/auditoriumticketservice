@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -47,6 +48,9 @@ public class TicketServiceImpl implements TicketService {
      */
     private Map<String, SeatHold> confirmations;
 
+    /** uniqueSeatHoldId create unique identifier for seatHold objects. */
+    private int uniqueSeatHoldId;
+
     /** constant for the number of row in Auditorium. */
     private static final int ROWNUM = 10;
 
@@ -65,6 +69,7 @@ public class TicketServiceImpl implements TicketService {
         customers = new HashMap<String, Customer>();
         seatHolds = new HashMap<Integer, SeatHold>();
         confirmations = new HashMap<String, SeatHold>();
+        this.uniqueSeatHoldId = 0;
     }
 
     /** Getter Method for customers.
@@ -148,8 +153,24 @@ public class TicketServiceImpl implements TicketService {
      */
     public SeatHold findAndHoldSeats(final int numSeats,
                                      final String customerEmail) {
+        if (numSeats <= 0 || numSeats > auditorium.getAvailableSeats()) {
+            return null;
+        }
         clearExpiredTicketHolds();
-        return null;
+        if (!customers.containsKey(customerEmail)) {
+            Customer customer = new Customer(customerEmail);
+            customers.put(customerEmail, customer);
+        }
+        final Date currentTimeStamp = new Date();
+        final List<Seat> bestSeats = auditorium.findBestSeats(numSeats);
+        SeatHold seatHold = new SeatHold(++this.uniqueSeatHoldId,
+            customerEmail, currentTimeStamp);
+        seatHold.setHeldSeats(bestSeats);
+        seatHoldQueue.add(this.uniqueSeatHoldId);
+        seatHolds.put(this.uniqueSeatHoldId, seatHold);
+        auditorium.setAvailableSeats(
+            auditorium.getAvailableSeats() - bestSeats.size());
+        return seatHold;
     }
 
     /**
