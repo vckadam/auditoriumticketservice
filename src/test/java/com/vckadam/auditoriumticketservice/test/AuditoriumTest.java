@@ -1,4 +1,4 @@
-package com.vckadam.auditoriumticketservice.model.test;
+package com.vckadam.auditoriumticketservice.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,6 +30,7 @@ public class AuditoriumTest {
 
     /** constant holds index of row. */
     public static final int ROWIND = 3;
+
     /** auditorium holds object of Auditorium class. */
     private Auditorium auditorium;
 

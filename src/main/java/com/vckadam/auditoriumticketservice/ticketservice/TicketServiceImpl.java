@@ -12,12 +12,14 @@ import java.util.UUID;
 import com.vckadam.auditoriumticketservice.enumerator.SeatType;
 import com.vckadam.auditoriumticketservice.exception.HouseFullException;
 import com.vckadam.auditoriumticketservice.exception.InvalidCustomerEmailException;
+import com.vckadam.auditoriumticketservice.exception.InvalidRequstedNumberOfSeatsException;
 import com.vckadam.auditoriumticketservice.exception.InvalidSeatHoldIdException;
 import com.vckadam.auditoriumticketservice.exception.OnlyFewSeatsAvailableException;
 import com.vckadam.auditoriumticketservice.model.Auditorium;
 import com.vckadam.auditoriumticketservice.model.Customer;
 import com.vckadam.auditoriumticketservice.model.Seat;
 import com.vckadam.auditoriumticketservice.model.SeatHold;
+
 
 /**
  * SeatHold serves as a central place for providing ticket service
@@ -73,6 +75,13 @@ public class TicketServiceImpl implements TicketService {
         seatHolds = new HashMap<Integer, SeatHold>();
         confirmations = new HashMap<String, SeatHold>();
         this.uniqueSeatHoldId = 0;
+    }
+
+    /** Getter Method for auditorium.
+     *  @return object of auditorium class
+     */
+    public Auditorium getAuditorium() {
+        return this.auditorium;
     }
 
     /** Getter Method for customers.
@@ -159,6 +168,10 @@ public class TicketServiceImpl implements TicketService {
     public SeatHold findAndHoldSeats(final int numSeats,
                                      final String customerEmail) {
         if (numSeats <= 0) {
+            throw new InvalidRequstedNumberOfSeatsException(
+                "Number of seats is invalid");
+        }
+        if (auditorium.getAvailableSeats() <= 0) {
             throw new HouseFullException("House is Full.");
         }
         if (numSeats > auditorium.getAvailableSeats()) {
@@ -192,6 +205,7 @@ public class TicketServiceImpl implements TicketService {
      */
     public String reserveSeats(final int seatHoldId,
                                final String customerEmail) {
+        clearExpiredTicketHolds();
         if (!seatHolds.containsKey(seatHoldId)) {
             throw new InvalidSeatHoldIdException(
                 "SeatHold id is either expired or doesn't exist.");
@@ -201,7 +215,6 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidCustomerEmailException(
                 "Email id doen't match with the records.");
         }
-        clearExpiredTicketHolds();
         String confirmationCode = UUID.randomUUID().toString();
         customers.get(customerEmail).getConfirmations().add(confirmationCode);
         for (Seat seat : seatHold.getHeldSeats()) {

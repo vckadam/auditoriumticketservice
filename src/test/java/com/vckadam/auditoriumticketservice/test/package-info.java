@@ -6,4 +6,4 @@
  * @version 1.0
  *
  */
-package com.vckadam.auditoriumticketservice.model.test;
+package com.vckadam.auditoriumticketservice.test;
