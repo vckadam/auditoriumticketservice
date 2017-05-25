@@ -1,4 +1,6 @@
 ******************************************************************
+About: 
+
 Auditorium ticket service provider with following functions.
 
 1. Find number of seats available in Auditorium.
@@ -8,7 +10,7 @@ Auditorium ticket service provider with following functions.
 3. Reserve and commit seats held by the customer.
 
 ******************************************************************
-Environment
+Environment:
 
 JDK 1.8
 Apache Maven 3.5
@@ -16,7 +18,7 @@ Apache Maven 3.5
 Build & Test command: mvn clean install
 
 ******************************************************************
-Assumption:
+Assumptions:
 
 1. Every row has same number of tickets.
 
