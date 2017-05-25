@@ -22,7 +22,7 @@ import com.vckadam.auditoriumticketservice.model.SeatHold;
 
 
 /**
- * SeatHold serves as a central place for providing ticket service
+ * TicketServiceImpl serves as a central place for providing ticket service
  * functionalities.
  */
 public class TicketServiceImpl implements TicketService {
@@ -35,20 +35,20 @@ public class TicketServiceImpl implements TicketService {
      */
     private Queue<Integer> seatHoldQueue;
 
-    /**Map to store customers
-     * key holds email address of customer
+    /**Map to store customers.
+     * key holds email address of customer.
      * value holds object of Customer class.
      */
     private Map<String, Customer> customers;
 
-    /**Map to store SeatHold objects
-     * key holds seatHoldId
+    /**Map to store SeatHold objects.
+     * key holds seatHoldId.
      * value holds object of SeatHold class.
      */
     private Map<Integer, SeatHold> seatHolds;
 
-    /**Map to store all reserved SeatHold objects
-     * key holds confirmation string
+    /**Map to store all reserved SeatHold objects.
+     * key holds confirmation string.
      * value holds object of SeatHold class.
      */
     private Map<String, SeatHold> confirmations;
@@ -121,7 +121,6 @@ public class TicketServiceImpl implements TicketService {
                 continue;
             }
             for (Seat seat : seatHold.getHeldSeats()) {
-                //Seat seat = auditorium.getSeats().get(seatId);
                 seat.setSeatType(SeatType.OPEN);
                 rowIdSet.add(seat.getRowId());
             }
@@ -134,14 +133,13 @@ public class TicketServiceImpl implements TicketService {
                 auditorium.getUpdateMaxConsEmptySeatsInRow(rowId));
         }
         auditorium.updateMaxConsecutiveEmptySeats();
-        //Arrays.sort(auditorium.getMaxConsecutiveEmptySeatsInRow());
         auditorium.setAvailableSeats(auditorium.getAvailableSeats()
             - rowIdSet.size());
     }
 
     /** Method checks that seatHold is expired or not.
      *  @param seatHoldId holds seatHold identifier.
-     *  @return true if seatHold object is expired.
+     *  @return true if seatHold object is expired, false otherwise.
      */
     public boolean isExpired(final int seatHoldId) {
         return ((new Date().getTime() - (seatHolds.get(seatHoldId)
