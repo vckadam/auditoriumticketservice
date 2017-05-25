@@ -10,13 +10,13 @@ public class Seat {
     /**rowNo holds number of the seat. */
     private final String seatNo;
 
-    /**row id for the seat.*/
+    /**Row id for the seat.*/
     private final char rowId;
 
-    /**column id for the seat.*/
+    /**Column id for the seat.*/
     private final int columnId;
 
-    /**type for the seat including held, conformed and open.*/
+    /**Type for the seat including held, conformed and open.*/
     private SeatType seatType;
 
     /**Constructor for Seat class.

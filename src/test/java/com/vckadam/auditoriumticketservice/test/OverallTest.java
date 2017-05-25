@@ -1,10 +1,8 @@
 package com.vckadam.auditoriumticketservice.test;
 
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import com.vckadam.auditoriumticketservice.enumerator.SeatType;
 import com.vckadam.auditoriumticketservice.model.SeatHold;
 import com.vckadam.auditoriumticketservice.ticketservice.TicketServiceImpl;

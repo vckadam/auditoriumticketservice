@@ -38,7 +38,7 @@ public class TicketServiceImplTest {
         ticketServiceImpl = new TicketServiceImpl();
     }
 
-    /** Method test isExpired
+    /** Method tests isExpired
      *  method in TicketServiceImpl class.
      *  If SeatHold is expired return true.
      */

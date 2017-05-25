@@ -22,7 +22,7 @@ public class SeatHold {
     /**list of the seats held by the customer. */
     private List<Seat> heldSeats;
 
-    /**isConfirmed holds reservation confirmation of SeatHold.*/
+    /**confirmed holds reservation confirmation of SeatHold.*/
     private boolean confirmed;
 
     /**Constructor for SeatHold class.
@@ -88,21 +88,4 @@ public class SeatHold {
          this.confirmed = status;
     }
 
-  /*  *//**Method to add a seatId in set of seats.
-     * @param seat holds the seat.
-     *//*
-    public void addSeat(final Seat seat) {
-        if (!heldSeats.contains(seat)) {
-            heldSeats.add(seat);
-        }
-    }
-
-    *//**Method to remove a seat in set of seats.
-     * @param seat holds identifier for the seat.
-     *//*
-    public void removeSeat(final String seat) {
-        if (heldSeats.contains(seat)) {
-            heldSeats.remove(seat);
-        }
-    }*/
 }
