@@ -1,0 +1,13 @@
+com\vckadam\auditoriumticketservice\ticketservice\TicketService.class
+com\vckadam\auditoriumticketservice\model\Seat.class
+com\vckadam\auditoriumticketservice\model\Auditorium.class
+com\vckadam\auditoriumticketservice\model\MaxConsecutiveEmptySeatsInRow.class
+com\vckadam\auditoriumticketservice\model\SeatHold.class
+com\vckadam\auditoriumticketservice\model\Customer.class
+com\vckadam\auditoriumticketservice\enumerator\SeatType.class
+com\vckadam\auditoriumticketservice\exception\InvalidCustomerEmailException.class
+com\vckadam\auditoriumticketservice\ticketservice\TicketServiceImpl.class
+com\vckadam\auditoriumticketservice\exception\InvalidRequstedNumberOfSeatsException.class
+com\vckadam\auditoriumticketservice\exception\OnlyFewSeatsAvailableException.class
+com\vckadam\auditoriumticketservice\exception\HouseFullException.class
+com\vckadam\auditoriumticketservice\exception\InvalidSeatHoldIdException.class
