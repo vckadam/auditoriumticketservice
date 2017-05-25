@@ -1,5 +1,6 @@
 package com.vckadam.auditoriumticketservice.ticketservice;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -108,6 +109,7 @@ public class TicketServiceImpl implements TicketService {
                 auditorium.setMaxConsecutiveEmptySeatsInRow(rowId,
                     auditorium.getUpdateMaxConsEmptySeats(rowId));
             }
+            Arrays.sort(auditorium.getMaxConsecutiveEmptySeatsInRow());
             auditorium.setAvailableSeats(auditorium.getAvailableSeats()
                 - rowIdSet.size());
             auditorium.setMaxConsecutiveEmptySeats(auditorium.

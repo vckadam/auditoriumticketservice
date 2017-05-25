@@ -1,9 +1,10 @@
 package com.vckadam.auditoriumticketservice.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.HashSet;
-
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -234,6 +235,45 @@ public class Auditorium {
         return start;
     }
 
+    /** Method finds given number of seats in single row.
+     *
+     *  @param numberOfSeats holds number of seats to find in single row.
+     *  @return list of all the found seats.
+     */
+    public List<Seat> findSeatsInSingleRow(final int numberOfSeats) {
+        List<Seat> foundSeats = new ArrayList<Seat>();
+        MaxConsecutiveEmptySeatsInRow selected =
+            maxConsecutiveEmptySeatsInRow[0];
+        for (int i = 0; i < maxConsecutiveEmptySeatsInRow.length; i++) {
+            if (numberOfSeats < maxConsecutiveEmptySeatsInRow[i]
+                .getMaxConsEmptySeats()) {
+                break;
+            } else if (numberOfSeats == maxConsecutiveEmptySeatsInRow[i]
+                .getMaxConsEmptySeats()) {
+                selected = maxConsecutiveEmptySeatsInRow[i];
+                break;
+            } else {
+                if (selected.getMaxConsEmptySeats()
+                    != maxConsecutiveEmptySeatsInRow[i]
+                        .getMaxConsEmptySeats()) {
+                    selected = maxConsecutiveEmptySeatsInRow[i];
+                }
+            }
+        }
+        final int selectedColumn = this.
+            selectStartColumn(selected.getRowId(), numberOfSeats);
+        for (int i = selectedColumn; i < selectedColumn + numberOfSeats; i++) {
+            seats[selected.getRowId()][i].setSeatType(SeatType.HELD);
+            foundSeats.add(seats[selected.getRowId()][i]);
+        }
+        this.updateCollection(this.generateRowId(selected.getRowId()),
+            this.getUpdateMaxConsEmptySeats(
+                this.generateRowId(selected.getRowId())));
+        this.maxConsecutiveEmptySeats = this.maxConsecutiveEmptySeatsInRow[0]
+            .getMaxConsEmptySeats();
+        return foundSeats;
+    }
+
     /** Method generate key for Seats map.
      *
      * @param rowId hold row Identifier
@@ -249,16 +289,27 @@ public class Auditorium {
                 + Integer.toString(colId);
     }
 
-    /** Method generates key for MaxConsEmptySeatsObjs map.
+    /** Method convert rowId to row index.
      *
      * @param rowId holds row Identifier
-     * @return Generated key for the map
+     * @return Generated row index for rowId
      */
-    public int createKeyFormaxConsEmptySeatsObjs(final char rowId) {
+    public int generateRowIndex(final char rowId) {
         if (rowId < 'A' || rowId >= (char) ('A' + this.numberOfRows)) {
             return -1;
         }
         return rowId - 'A';
     }
 
+    /** Method convert rowInd to rowId.
+    *
+    * @param rowInd holds index of the row.
+    * @return Generated rowId for the row.
+    */
+    public char generateRowId(final int rowInd) {
+        if (rowInd < 0 || rowInd >= this.numberOfRows) {
+            return '\0';
+        }
+        return (char) (rowInd + 'A');
+    }
 }

@@ -79,26 +79,47 @@ public class AuditoriumTest {
        assertEquals(actualOutput, "");
     }
 
-    /** Method test createKeyFormaxConsEmptySeatsObjs()
+    /** Method test generateRowIndex
      *  method in Auditorium class.
      *  For valid rowId, method return valid output.
      */
     @Test
-    public void testCreateKeyFormaxConsEmptySeatsObjs1() {
+    public void testGenerateRowIndex1() {
        //Auditorium auditorium = new Auditorium(2, 2);
-       int actualOutput = auditorium.createKeyFormaxConsEmptySeatsObjs('B');
+       int actualOutput = auditorium.generateRowIndex('B');
        assertEquals(actualOutput, 1);
     }
 
-    /** Method test createKeyFormaxConsEmptySeatsObjs()
+    /** Method test generateRowIndex
      *  method in Auditorium class.
      *  If rowId is not valid, method returns -1.
      */
     @Test
-    public void testCreateKeyFormaxConsEmptySeatsObjs2() {
+    public void testGenerateRowIndex2() {
        //Auditorium auditorium = new Auditorium(1, 2);
-       int actualOutput = auditorium.createKeyFormaxConsEmptySeatsObjs('Z');
+       int actualOutput = auditorium.generateRowIndex('Z');
        assertEquals(actualOutput, -1);
+    }
+
+    /** Method test generateRowId
+     *  method in Auditorium class.
+     *  If rowId is valid, method returns valid rowId.
+     */
+    @Test
+    public void testGenerateRowId1() {
+       char actualOutput = auditorium.generateRowId(1);
+       assertEquals(actualOutput, 'B');
+    }
+
+    /** Method test generateRowId
+     *  method in Auditorium class.
+     *  If rowId is valid, method returns valid rowId.
+     */
+    @Test
+    public void testGenerateRowId2() {
+       final int invalidRowId = 25;
+       char actualOutput = auditorium.generateRowId(invalidRowId);
+       assertEquals(actualOutput, '\0');
     }
 
     /** Method test getUpdateMaxConsEmptySeats()
