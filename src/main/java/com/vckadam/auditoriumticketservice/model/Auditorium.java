@@ -2,10 +2,7 @@ package com.vckadam.auditoriumticketservice.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Auditorium serves as a central place for all actions inside auditorium.
@@ -275,7 +272,16 @@ public class Auditorium {
         if (numberOfSeats <= this.maxConsecutiveEmptySeats) {
             return this.findSeatsInSingleRow(numberOfSeats);
         } else {
-            return this.splitSeatsInMultipleRows(numberOfSeats);
+            List<Seat> foundSeats = new ArrayList<Seat>();
+            int halfNumberOfSeats = numberOfSeats / 2;
+            if (numberOfSeats % 2 != 0) {
+                foundSeats.addAll(
+                    this.findBestSeats(halfNumberOfSeats + 1));
+            } else {
+                foundSeats.addAll(this.findBestSeats(halfNumberOfSeats));
+            }
+            foundSeats.addAll(this.findBestSeats(halfNumberOfSeats));
+            return foundSeats;
         }
     }
 
@@ -283,7 +289,7 @@ public class Auditorium {
     *
     * @param numberOfSeats holds number of seats to find.
     * @return a list of found seats.
-    */
+    *//*
     private List<Seat> splitSeatsInMultipleRows(final int numberOfSeats) {
         if (numberOfSeats <= this.maxConsecutiveEmptySeats) {
             return this.findSeatsInSingleRow(numberOfSeats);
@@ -297,7 +303,8 @@ public class Auditorium {
             foundSeats.addAll(this.splitSeatsInMultipleRows(halfNumberOfSeats));
             return foundSeats;
         }
-    }
+    }*/
+
     /** Method generate key for Seats map.
      *
      * @param rowId hold row Identifier
