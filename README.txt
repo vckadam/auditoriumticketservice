@@ -20,7 +20,7 @@ Build & Test command: mvn clean install
 ******************************************************************
 Assumptions:
 
-1. Every row has same number of tickets.
+1. Every row has same number of seats.
 
 2. Tickets can be held up till 120 seconds. 
 
