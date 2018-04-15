@@ -12,6 +12,8 @@ import com.vckadam.auditoriumticketservice.enumerator.SeatType;
 import com.vckadam.auditoriumticketservice.model.Auditorium;
 import com.vckadam.auditoriumticketservice.model.Seat;
 
+
+
 /**
  * AuditoriumTest class contains test cases for the methods
  * of Auditorium class.
